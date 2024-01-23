@@ -6,8 +6,8 @@ This machine learning project is designed to predict breast cancer based on rele
 
 ## Project Structure
 
-- **R**: R source code/scripts for the datapreprocessing and building machine learning model.
-- **models**: Saved machine learning models ??
+- **`R`**: R source code/scripts for the datapreprocessing and building machine learning model.
+- **`models`**: Saved machine learning models ??
 
 ## Getting Started
 
