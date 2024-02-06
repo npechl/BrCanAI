@@ -6,13 +6,15 @@ This machine learning project is designed to predict breast cancer based on rele
 
 ## Project Structure
 
-- **`R`**: R source code/scripts for the datapreprocessing and building machine learning model.
-- **`models`**: Saved machine learning models ??
+- ***`R`***: R source code/scripts for the datapreprocessing and building machine learning model.
+- ***`input`***: input datasets
+- ***```output```***: output results
 
 ## Getting Started
 
 1. Clone the repository:
 
-   ```bash
-   git clone https://github.com/gkarakatsoulis/BrCanAI.git
-   cd BrCanAI
+```bash
+git clone https://github.com/gkarakatsoulis/BrCanAI.git
+cd BrCanAI
+```
