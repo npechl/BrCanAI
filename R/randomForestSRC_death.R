@@ -118,30 +118,45 @@ obj <- rfsrc(
 
 obj
 
+pdf(file = "output/Death predictors/Rplot.pdf", width = 12, height = 6)
+
 plot(obj, cex = .75)
+
+dev.off()
 
 # get C-index --------------------------
 
-get.cindex(obj$yvar[,1], obj$yvar[,2], obj$predicted.oob)
+get.cindex(obj$yvar$survival_time, obj$yvar$death, obj$predicted.oob)
 
 # Variable Importance ------------------
 
-jk.obj <- subsample(obj)
-
-
-print(jk.obj)
-
-# Find Interactions Between Pairs of Variables -----------------------
-
-mm = find.interaction(obj)
-
-library(ComplexHeatmap)
-
-Heatmap(
-    mm, 
-    row_names_gp = gpar(fontsize = 4),
-    column_names_gp = gpar(fontsize = 4)
+out = data.table(
+    "Variable" = names(obj$importance),
+    "Importance" = obj$importance
 )
+
+out = out[order(-Importance)]
+
+out$`Relative Imp` = out$Importance / max(out$Importance)
+
+writexl::write_xlsx(out, "output/Death predictors/variable-importance.xlsx")
+
+# jk.obj <- subsample(obj)
+# 
+# 
+# print(jk.obj)
+
+# # Find Interactions Between Pairs of Variables -----------------------
+# 
+# mm = find.interaction(obj)
+# 
+# library(ComplexHeatmap)
+# 
+# Heatmap(
+#     mm, 
+#     row_names_gp = gpar(fontsize = 4),
+#     column_names_gp = gpar(fontsize = 4)
+# )
 
 
 
