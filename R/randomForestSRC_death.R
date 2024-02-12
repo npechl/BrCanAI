@@ -104,6 +104,19 @@ index = row.names(nzv)[which(!nzv$nzv)]
 
 df_filtered = df_rf[, index, with = FALSE]
 
+# multivariate analysis variables -----------------
+
+
+x = "input/RFs_Multivariate.xlsx" |>
+    readxl::read_xlsx() |>
+    setDT()
+
+x = x$Survival[which(!is.na(x$Survival))] |> 
+    janitor::make_clean_names()
+
+df_filtered = df_filtered[, c(x, "death", "survival_time"), with = FALSE]
+
+
 # build model --------------------
 
 obj <- rfsrc(
