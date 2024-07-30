@@ -1,0 +1,15 @@
+                         Sample size: 39
+                    Number of deaths: 22
+                     Number of trees: 10000
+           Forest terminal node size: 3
+       Average no. of terminal nodes: 8.6458
+No. of variables tried at each split: 10
+              Total no. of variables: 84
+       Resampling used to grow trees: swor
+    Resample size used to grow trees: 25
+                            Analysis: RSF
+                              Family: surv
+                      Splitting rule: logrank
+                          (OOB) CRPS: 997.36022066
+                   (OOB) stand. CRPS: 0.23275618
+   (OOB) Requested performance error: 0.4639866

@@ -15,10 +15,14 @@ df = "input/Final_Data_clean.xlsx" |> readxl::read_xlsx() |> setDT()
 
 # create survival time -------------
 
-df$OS = ifelse(df$Progress_ == "Yes", 1, 0)
+df$flag = df$DateDeath > df$DateProgress
+
+df$OS = ifelse(df$Progress_ == "Yes" | df$Death_ == 'Yes', 1, 0)
 df$OS_time = ifelse(
     df$OS == 1, 
-    df$DateProgress - df$AcceptedDateTime, 
+    
+    ifelse(df$flag, df$DateProgress - df$AcceptedDateTime, df$DateDeath - df$AcceptedDateTime),
+    
     df$LastContact - df$AcceptedDateTime
 )
 
@@ -31,6 +35,7 @@ df$Death_           = NULL
 df$DateDeath        = NULL
 df$Progress_        = NULL
 df$DateProgress     = NULL
+df$flag             = NULL
 
 # create factors ----------------------
 
@@ -87,21 +92,22 @@ r1 = compute_rfsrc(df, ntree = 10000, nodesize = 3, nsplit = 0)
 
 r1$obj |> print()
 r1$obj |> plot(cex = .5)
+
+r1$importance |> writexl::write_xlsx("output/Progression predictors/exp1-variableImportance.xlsx")
+
+svg(filename = "output/Progression predictors/exp1.svg", width = 20, height = 10)
+r1$obj |> plot(cex = .5)
+dev.off()
+
+# r1$importance[which(Importance >= .01)]$Predictor
+
 ## experiment 2 ----------------------------------
 
 index = c(
     "GroupTreatm", "AgeAccepted", "PS", "EBERPROBE_neg_pos",
     "Smoking", "Sex", "T", "N", "CyclinD1", "ki67",
-    "Mutation status", "Stability status", "OS", "OS_time"
-)
-
-r2 = compute_rfsrc(df[, index, with = FALSE], ntree = 10000, nodesize = 3, nsplit = 0)
-
-r2$obj |> plot(cex = .85)
-
-## experiment 3 --------------------------------------
-
-index = c(
+    "Mutation status", "Stability status", 
+    
     "TAU_score",   "ERCC1_score", 
     "p63_score",   "ECADH_score", 
     "PADH_score",  "pakt473_score", 
@@ -111,10 +117,30 @@ index = c(
     "COX2_score",  "FASCIN_score", 
     "p53_score",   "EGFR_score", 
     "GSK3B_score", "p4442_score",
+    
     "OS", "OS_time"
 )
 
-r3 = compute_rfsrc(df[, index, with = FALSE], ntree = 500, nodesize = 10, nsplit = 0)
+r2 = compute_rfsrc(df[, index, with = FALSE], ntree = 10000, nodesize = 3, nsplit = 0)
+
+
+r2$obj |> print()
+r2$obj |> plot(cex = .85)
+
+r2$importance |> writexl::write_xlsx("output/Progression predictors/exp2-variableImportance.xlsx")
+
+svg(filename = "output/Progression predictors/exp2.svg", width = 20, height = 10)
+r2$obj |> plot()
+dev.off()
+
+## experiment 3 --------------------------------------
+
+# index = c(
+# 
+#     "OS", "OS_time"
+# )
+# 
+# r3 = compute_rfsrc(df[, index, with = FALSE], ntree = 500, nodesize = 10, nsplit = 0)
 
 ## experiment 4 --------------------------------------
 
@@ -128,11 +154,21 @@ index = c(
     "NOTCH3", "PALB2",  "PDCD1", "PIK3CA", "POLE",             
     "PTCH1",  "RANBP2", "SETD2", "SRCAP",  "SYNE1",            
     "TET1",   "TET2",   "TP53",  "TSC1",   "TSHZ3",            
-    "ZNF521", "OS",     "OS_time"
+    "ZNF521", 
+    
+    "OS",     "OS_time"
 )
 
-r4 = compute_rfsrc(df[, index, with = FALSE], ntree = 500, nodesize = 10, nsplit = 0)
+r4 = compute_rfsrc(df[, index, with = FALSE], ntree = 10000, nodesize = 10, nsplit = 0)
 
+r4$obj |> print()
+r4$obj |> plot()
+
+r4$importance |> writexl::write_xlsx("output/Progression predictors/exp3-variableImportance.xlsx")
+
+svg(filename = "output/Progression predictors/exp3.svg", width = 20, height = 10)
+r4$obj |> plot()
+dev.off()
 
 ## experiment 5 --------------------------------------
 
@@ -142,4 +178,17 @@ index = c(
     "OS",     "OS_time"
 )
 
-r5 = compute_rfsrc(df[, index, with = FALSE], ntree = 500, nodesize = 10, nsplit = 0)
+r5 = compute_rfsrc(df[, index, with = FALSE], ntree = 5000, nodesize = 10, nsplit = 0)
+
+r5$obj |> print()
+r5$obj |> plot()
+
+r5$importance |> writexl::write_xlsx("output/Progression predictors/exp4-variableImportance.xlsx")
+
+svg(filename = "output/Progression predictors/exp4.svg", width = 20, height = 10)
+r5$obj |> plot()
+dev.off()
+
+
+
+
